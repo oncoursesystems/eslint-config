@@ -19,7 +19,7 @@
     },
     "dependencies": {
         "@babel/core": "^7.21.4",
-        "@babel/parser": "^7.21.4",
+        "@babel/parser": "^7.22.7",
         "@oncoursesystems/eslint-config-base": "workspace:*",
         "eslint": "^8.38.0",
         "prettier": "^2.8.7",
