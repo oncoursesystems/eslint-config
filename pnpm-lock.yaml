@@ -26,7 +26,7 @@ importers:
         version: 2.11.0(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
       '@tanstack/eslint-plugin-query':
         specifier: ^5.61.4
-        version: 5.61.4(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
+        version: 5.61.6(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -1121,8 +1121,8 @@ packages:
     peerDependencies:
       eslint: '>=8.40.0'
 
-  '@tanstack/eslint-plugin-query@5.61.4':
-    resolution: {integrity: sha512-QVVsY8hwrX9r6c8lLV48oY682SU2GeVlo0hWMSaOKkI05Yi4bXhw5jv7E2qkbjGrgA6DcVl3o/F0dT4wpT+/SQ==}
+  '@tanstack/eslint-plugin-query@5.61.6':
+    resolution: {integrity: sha512-39DEve67KRcUOv4WI3svSyKzFGEhPTH4gzy99UBh2PmrDOUvAjfG59zSheNJFLHHokpSOQYJhFRNuMlC00CBMw==}
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
@@ -1780,6 +1780,12 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
+  eslint-compat-utils@0.6.4:
+    resolution: {integrity: sha512-/u+GQt8NMfXO8w17QendT4gvO5acfxQsAKirAt0LVxDnr2N8YLCVbregaNc/Yhp7NM128DwCaRvr8PLDfeNkQw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      eslint: '>=6.0.0'
+
   eslint-config-flat-gitignore@0.3.0:
     resolution: {integrity: sha512-0Ndxo4qGhcewjTzw52TK06Mc00aDtHNTdeeW2JfONgDcLkRO/n/BteMRzNVpLQYxdCC/dFEilfM9fjjpGIJ9Og==}
     peerDependencies:
@@ -2051,8 +2057,8 @@ packages:
       jiti:
         optional: true
 
-  esm-env@1.1.4:
-    resolution: {integrity: sha512-oO82nKPHKkzIj/hbtuDYy/JHqBHFlMIW36SDiPCVsj87ntDLcWN+sJ1erdVryd4NxODacFTsdrIE3b7IamqbOg==}
+  esm-env@1.2.0:
+    resolution: {integrity: sha512-OhSQuHL3mUcaQHjGe8UMG8GsJIJHYYz0flR0h9fiTPNMupLMkb7TvcRD0EeJXW5a8GHBgfz08b6FDLNK7kkPQA==}
 
   esno@4.8.0:
     resolution: {integrity: sha512-acMtooReAQGzLU0zcuEDHa8S62meh5aIyi8jboYxyvAePdmuWx2Mpwmt0xjwO0bs9/SXf+dvXJ0QJoDWw814Iw==}
@@ -4571,9 +4577,9 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/eslint-plugin-query@5.61.4(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)':
+  '@tanstack/eslint-plugin-query@5.61.6(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)':
     dependencies:
-      '@typescript-eslint/utils': 8.15.0(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
+      '@typescript-eslint/utils': 8.16.0(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
       eslint: 9.15.0(jiti@2.4.0)
     transitivePeerDependencies:
       - supports-color
@@ -5357,6 +5363,12 @@ snapshots:
       eslint: 9.15.0(jiti@2.4.0)
       semver: 7.6.3
 
+  eslint-compat-utils@0.6.4(eslint@9.15.0(jiti@2.4.0)):
+    dependencies:
+      eslint: 9.15.0(jiti@2.4.0)
+      semver: 7.6.3
+    optional: true
+
   eslint-config-flat-gitignore@0.3.0(eslint@9.15.0(jiti@2.4.0)):
     dependencies:
       '@eslint/compat': 1.2.3(eslint@9.15.0(jiti@2.4.0))
@@ -5404,7 +5416,7 @@ snapshots:
       '@typescript-eslint/types': 8.16.0
       astro-eslint-parser: 1.1.0(typescript@5.7.2)
       eslint: 9.15.0(jiti@2.4.0)
-      eslint-compat-utils: 0.6.3(eslint@9.15.0(jiti@2.4.0))
+      eslint-compat-utils: 0.6.4(eslint@9.15.0(jiti@2.4.0))
       globals: 15.12.0
       postcss: 8.4.49
       postcss-selector-parser: 7.0.0
@@ -5825,7 +5837,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  esm-env@1.1.4:
+  esm-env@1.2.0:
     optional: true
 
   esno@4.8.0:
@@ -7273,7 +7285,7 @@ snapshots:
       acorn-typescript: 1.4.13(acorn@8.14.0)
       aria-query: 5.3.2
       axobject-query: 4.1.0
-      esm-env: 1.1.4
+      esm-env: 1.2.0
       esrap: 1.2.2
       is-reference: 3.0.3
       locate-character: 3.0.0
