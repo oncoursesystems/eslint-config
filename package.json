@@ -51,7 +51,7 @@
         "@tanstack/eslint-plugin-query": "^5.61.4",
         "@types/fs-extra": "^11.0.4",
         "@types/node": "^22.10.0",
-        "bumpp": "^9.8.1",
+        "bumpp": "^10.0.0",
         "eslint": "^9.15.0",
         "eslint-flat-config-utils": "^0.4.0",
         "eslint-plugin-expo": "^0.1.0",
