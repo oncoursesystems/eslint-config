@@ -9,7 +9,8 @@ jobs:
   release:
     runs-on: self-hosted
     permissions:
-      contents: write
+      contents: write # create the GitHub release
+      id-token: write # OIDC token for npm trusted publishing
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,16 +30,21 @@ jobs:
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
+      # Trusted publishing (OIDC) requires npm CLI >= 11.5.1.
+      - name: Ensure npm supports trusted publishing
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm run build
 
+      # Publishes via OIDC trusted publishing — no token needed. Requires a
+      # trusted publisher to be configured for this package on npmjs.com
+      # (GitHub Actions, repo oncoursesystems/eslint-config, workflow release.yml).
       - name: Publish to npm
-        run: pnpm publish --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
