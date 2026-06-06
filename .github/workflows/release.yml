@@ -7,7 +7,10 @@ on:
 
 jobs:
   release:
-    runs-on: self-hosted
+    # npm trusted publishing (OIDC) is only supported on GitHub-hosted runners,
+    # not self-hosted. This job only builds and publishes a public package, so
+    # it has no need for the self-hosted runner used elsewhere.
+    runs-on: ubuntu-latest
     permissions:
       contents: write # create the GitHub release
       id-token: write # OIDC token for npm trusted publishing
@@ -30,7 +33,7 @@ jobs:
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
-      # Trusted publishing (OIDC) requires npm CLI >= 11.5.1.
+      # Trusted publishing requires npm CLI >= 11.5.1 (and Node >= 22.14.0).
       - name: Ensure npm supports trusted publishing
         run: npm install -g npm@latest
 
@@ -40,11 +43,12 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # Publishes via OIDC trusted publishing — no token needed. Requires a
-      # trusted publisher to be configured for this package on npmjs.com
-      # (GitHub Actions, repo oncoursesystems/eslint-config, workflow release.yml).
+      # Publishes via OIDC trusted publishing — no token needed, and provenance
+      # is generated automatically. Requires a trusted publisher to be configured
+      # for this package on npmjs.com (GitHub Actions, repo
+      # oncoursesystems/eslint-config, workflow release.yml).
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: npm publish --access public
 
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
