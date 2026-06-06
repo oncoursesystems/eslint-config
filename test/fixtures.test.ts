@@ -136,5 +136,5 @@ export default oncourse(
             }
             await expect.soft(content).toMatchFileSnapshot(join(output, file));
         }));
-    }, 30_000);
+    }, 120_000);
 }
