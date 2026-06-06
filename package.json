@@ -30,6 +30,9 @@
     "files": [
         "dist"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "build": "tsup --format esm,cjs --clean --dts",
         "stub": "tsup --format esm",
@@ -39,7 +42,7 @@
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "prepack": "pnpm build",
-        "release": "bumpp && pnpm publish",
+        "release": "bumpp",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
         "prepare": "simple-git-hooks"
