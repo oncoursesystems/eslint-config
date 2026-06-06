@@ -1,43 +1,39 @@
-import type {
-    Awaitable,
-    ConfigNames,
-    OptionsConfig,
-    TypedFlatConfigItem,
-} from '@antfu/eslint-config';
-import type { Linter } from 'eslint';
-import type { FlatConfigComposer } from 'eslint-flat-config-utils';
+import type { Composer, OncourseOptions, UserConfigs } from './types';
 
 import { antfu } from '@antfu/eslint-config';
 
-import oncourseConfigs from './config';
-import oncourseOptions from './options';
+import { baseOptions, baseRules } from './base';
 
-export type Options = Omit<TypedFlatConfigItem, 'files'> &
-    OptionsConfig & {
-        expo?: boolean;
-        sencha?: boolean;
-    };
-export type Composer = FlatConfigComposer<TypedFlatConfigItem, ConfigNames>;
-export type Configs = Array<
-    Awaitable<
-        | Array<Linter.Config>
-        | Array<TypedFlatConfigItem>
-        | FlatConfigComposer<any, any>
-        | TypedFlatConfigItem
-    >
->;
-
-async function oncourse(options?: Options, ...configs: Configs): Promise<Composer> {
+/**
+ * The OnCourse base config: `@antfu/eslint-config` + OnCourse house style
+ * (4-space indent, single quotes, semicolons, formatters) for plain JS/TS
+ * projects. The `react`, `expo`, and `sencha` factories all build on this.
+ *
+ * @example
+ * ```ts
+ * import oncourse from '@oncoursesystems/eslint-config';
+ *
+ * export default oncourse();
+ * ```
+ */
+export async function oncourse(
+    options: OncourseOptions = {},
+    ...userConfigs: UserConfigs
+): Promise<Composer> {
     return antfu(
-        {
-            ...oncourseOptions(options),
-            ...options,
-        },
-        ...oncourseConfigs(),
-        ...configs,
+        baseOptions(options),
+        ...baseRules(options),
+        ...userConfigs,
     );
 }
 
 export default oncourse;
+
+export { baseOptions, baseRules } from './base';
+export { expo } from './factories/expo';
+export { react } from './factories/react';
+
+export { sencha } from './factories/sencha';
+export type { Composer, OncourseOptions, UserConfigs } from './types';
 
 export * from '@antfu/eslint-config';

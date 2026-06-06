@@ -1,7 +1,7 @@
 {
     "name": "@oncoursesystems/eslint-config",
     "type": "module",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "description": "OnCourse Systems' ESLint configurations",
     "author": "OnCourse Systems For Education",
     "license": "MIT",
@@ -11,7 +11,12 @@
         "url": "git+https://github.com/oncoursesystems/eslint-config.git"
     },
     "keywords": [
-        "eslint-config"
+        "eslint-config",
+        "react",
+        "react-native",
+        "expo",
+        "sencha",
+        "extjs"
     ],
     "exports": {
         ".": {
@@ -23,60 +28,74 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "files": [
-        "bin",
         "dist"
     ],
     "scripts": {
         "build": "tsup --format esm,cjs --clean --dts",
         "stub": "tsup --format esm",
-        "dev": "npx @pn --config eslint.config.ts",
+        "dev": "npx @eslint/config-inspector --config eslint.config.ts",
         "build:inspector": "pnpm build && npx @eslint/config-inspector build",
         "watch": "tsup --format esm,cjs --watch",
-        "lint": "eslint --flag unstable_ts_config .",
-        "lint:fix": "eslint --flag unstable_ts_config . --fix",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "prepack": "pnpm build",
         "release": "bumpp && pnpm publish",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
         "prepare": "simple-git-hooks"
     },
+    "peerDependencies": {
+        "@sencha/eslint-plugin-extjs": "^8.0.0",
+        "@tanstack/eslint-plugin-query": "^5.101.0",
+        "eslint": "^10.0.0",
+        "eslint-plugin-expo": "^1.0.3",
+        "eslint-plugin-tailwindcss": "^4.0.0-beta.0"
+    },
+    "peerDependenciesMeta": {
+        "@sencha/eslint-plugin-extjs": {
+            "optional": true
+        },
+        "@tanstack/eslint-plugin-query": {
+            "optional": true
+        },
+        "eslint-plugin-expo": {
+            "optional": true
+        },
+        "eslint-plugin-tailwindcss": {
+            "optional": true
+        }
+    },
     "dependencies": {
-        "@antfu/eslint-config": "^3.10.0"
+        "@antfu/eslint-config": "^9.0.0"
     },
     "devDependencies": {
-        "@eslint-react/eslint-plugin": "^1.17.1",
-        "@eslint/config-inspector": "^0.5.6",
-        "@sencha/eslint-plugin-extjs": "^7.8.0",
-        "@stylistic/eslint-plugin-migrate": "^2.11.0",
-        "@tanstack/eslint-plugin-query": "^5.61.4",
+        "@eslint-react/eslint-plugin": "^5.8.12",
+        "@eslint/config-inspector": "^3.0.4",
+        "@sencha/eslint-plugin-extjs": "^8.0.0",
+        "@tanstack/eslint-plugin-query": "^5.101.0",
         "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.10.0",
-        "bumpp": "^9.8.1",
-        "eslint": "^9.15.0",
-        "eslint-flat-config-utils": "^0.4.0",
-        "eslint-plugin-expo": "^0.1.0",
-        "eslint-plugin-format": "^0.1.2",
-        "eslint-plugin-react-hooks": "^5.0.0",
-        "eslint-plugin-react-refresh": "^0.4.14",
-        "eslint-plugin-tailwindcss": "^3.17.5",
-        "eslint-typegen": "^0.3.2",
-        "esno": "^4.8.0",
-        "execa": "^9.5.1",
-        "fast-glob": "^3.3.2",
-        "fs-extra": "^11.2.0",
-        "jiti": "^2.4.0",
-        "lint-staged": "^15.2.10",
-        "prettier": "^3.4.1",
-        "simple-git-hooks": "^2.11.1",
-        "tsup": "^8.3.5",
-        "typescript": "^5.7.2",
-        "vitest": "^2.1.6",
-        "wrangler": "^3.90.0"
+        "@types/node": "^25.9.2",
+        "bumpp": "^11.1.0",
+        "eslint": "^10.4.1",
+        "eslint-plugin-expo": "^1.0.3",
+        "eslint-plugin-format": "^2.0.1",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-react-refresh": "^0.5.2",
+        "eslint-plugin-tailwindcss": "4.0.0-beta.0",
+        "execa": "^9.6.1",
+        "fast-glob": "^3.3.3",
+        "fs-extra": "^11.3.5",
+        "jiti": "^2.7.0",
+        "lint-staged": "^17.0.7",
+        "simple-git-hooks": "^2.13.1",
+        "tsup": "^8.5.1",
+        "typescript": "^6.0.3",
+        "vitest": "^4.1.8"
     },
     "simple-git-hooks": {
         "pre-commit": "npx lint-staged"
     },
     "lint-staged": {
-        "*": "eslint --flag unstable_ts_config --fix"
+        "*": "eslint --fix"
     }
 }

@@ -1,10 +1,10 @@
+import type { OptionsConfig, TypedFlatConfigItem } from '../src/index';
+
 import { execa } from 'execa';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { join, resolve } from 'node:path';
 import { afterAll, beforeAll, it } from 'vitest';
-
-import type { OptionsConfig, TypedFlatConfigItem } from '../src/index';
 
 beforeAll(async () => {
     await fs.rm('_fixtures', { force: true, recursive: true });
@@ -86,6 +86,10 @@ runWithConfig(
     },
 );
 
+// Absolute path to the OnCourse config source. ESLint 10 loads `eslint.config.ts`
+// natively (via jiti), so fixtures can import the source directly with no build.
+const ONCOURSE_SRC = resolve('src/index.ts');
+
 function runWithConfig(name: string, configs: OptionsConfig, ...items: Array<TypedFlatConfigItem>) {
     it.concurrent(name, async ({ expect }) => {
         const from = resolve('fixtures/input');
@@ -97,11 +101,11 @@ function runWithConfig(name: string, configs: OptionsConfig, ...items: Array<Typ
                 return !src.includes('node_modules');
             },
         });
-        await fs.writeFile(join(target, 'eslint.config.js'), `
+        await fs.writeFile(join(target, 'eslint.config.ts'), `
 // @eslint-disable
-import antfu from '@antfu/eslint-config'
+import oncourse from ${JSON.stringify(ONCOURSE_SRC)}
 
-export default antfu(
+export default oncourse(
   ${JSON.stringify(configs)},
   ...${JSON.stringify(items) ?? []},
 )
@@ -116,7 +120,7 @@ export default antfu(
             cwd: target,
             ignore: [
                 'node_modules',
-                'eslint.config.js',
+                'eslint.config.ts',
             ],
         });
 
