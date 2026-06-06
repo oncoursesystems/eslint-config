@@ -20,18 +20,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm
-        with:
-          version: 10
-          run_install: false
-
       - name: Setup NodeJS
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: pnpm
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Enable Corepack
+        run: corepack enable
 
       # Trusted publishing requires npm CLI >= 11.5.1 (and Node >= 22.14.0).
       - name: Ensure npm supports trusted publishing
