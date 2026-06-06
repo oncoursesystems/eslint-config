@@ -1,10 +1,10 @@
 <div align="center">
-  <img width="250" src="https://raw.githubusercontent.com/oncoursesystems/.github/master/assets/logo.jpg" />
+  <img width="250" alt="OnCourse Systems logo" src="https://raw.githubusercontent.com/oncoursesystems/.github/master/assets/logo.jpg" />
   <br/><br/>
 
 # `@oncoursesystems/eslint-config`
 
-OnCourse Systems' ESLint and Prettier config presets for JS/TS/React/ReactNative/Sencha.
+OnCourse Systems' ESLint config presets for JS/TS, React, React Native/Expo, and Sencha ExtJS.
 
   <a href="https://github.com/oncoursesystems/eslint-config/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="OnCourse Systems ESLint config is released under the MIT license." />
@@ -14,30 +14,73 @@ OnCourse Systems' ESLint and Prettier config presets for JS/TS/React/ReactNative
   </a>
 </div>
 
-## Usage
+## What's in the box
 
-### Install
+Built on top of [`@antfu/eslint-config`](https://github.com/antfu/eslint-config) (v9) with OnCourse house style (4-space indent, single quotes, semicolons, Prettier-backed formatters). Requires **ESLint 10** and the flat config format.
+
+Four factories are exported:
+
+| Factory              | Use it for                       | Includes                                                        |
+| -------------------- | -------------------------------- | --------------------------------------------------------------- |
+| `oncourse` (default) | Plain JS/TS libraries & services | antfu base + OnCourse house style                               |
+| `react`              | React web apps                   | base + React (`@eslint-react`, hooks, refresh) + TanStack Query |
+| `expo`               | React Native / Expo apps         | `react` + `eslint-plugin-expo` rules + RN globals               |
+| `sencha`             | Sencha ExtJS apps                | lean classic-JS base + `@sencha/eslint-plugin-extjs`            |
+
+## Install
 
 ```bash
-# NPM
-npm install -D eslint @oncoursesystems/eslint-config
+# pnpm
+pnpm add -D eslint @oncoursesystems/eslint-config
 
-# PNPM
-pnpm i -D esling @oncoursesystems/eslint-config
+# npm
+npm install -D eslint @oncoursesystems/eslint-config
 ```
 
-Create a `esling.config.{js|ts|mjs}' file in your project root:
+Create an `eslint.config.{js,ts,mjs}` file in your project root and pick the factory that matches your project:
 
-```js
-// eslint.config.ts
+```ts
+// eslint.config.ts — plain JS/TS project
 import oncourse from '@oncoursesystems/eslint-config';
 
 export default oncourse();
 ```
 
-### Add script for package.json
+```ts
+// eslint.config.ts — React web app
+import { react } from '@oncoursesystems/eslint-config';
 
-For example:
+export default react();
+```
+
+```ts
+// eslint.config.ts — React Native / Expo app
+import { expo } from '@oncoursesystems/eslint-config';
+
+export default expo();
+```
+
+```ts
+// eslint.config.ts — Sencha ExtJS app
+import { sencha } from '@oncoursesystems/eslint-config';
+
+export default sencha();
+```
+
+The first time you run `npx eslint`, you'll be prompted to install any framework-specific plugins that aren't present yet (React, Expo, Sencha, TanStack Query, Tailwind). You can also install them up front:
+
+```bash
+# React / Expo
+pnpm add -D @eslint-react/eslint-plugin eslint-plugin-react-hooks eslint-plugin-react-refresh @tanstack/eslint-plugin-query
+
+# Expo (in addition to the React plugins above)
+pnpm add -D eslint-plugin-expo
+
+# Sencha ExtJS
+pnpm add -D @sencha/eslint-plugin-extjs
+```
+
+## Add scripts to package.json
 
 ```json
 {
@@ -48,9 +91,90 @@ For example:
 }
 ```
 
-### Config VS Code auto-fix on save
+## Options
 
-Install [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and create `.vscode/settings.json`
+Each factory accepts the same `(options?, ...userConfigs)` signature. `options` is passed straight through to `@antfu/eslint-config`, so anything documented in [antfu's customization guide](https://github.com/antfu/eslint-config#customization) works here too. Additional flat-config objects can be appended after it.
+
+```ts
+// eslint.config.ts
+import { react } from '@oncoursesystems/eslint-config';
+
+export default react(
+    // Configure integrations here (antfu options + OnCourse flags)
+    {
+        typescript: {
+            tsconfigPath: './tsconfig.json',
+        },
+    },
+    // Any additional objects are passed in as ESLint flat configs
+    {
+        files: ['src/**/*.ts', 'src/**/*.tsx'],
+        rules: {
+            'ts/typedef': 'off',
+        },
+    },
+);
+```
+
+### OnCourse-specific flags
+
+These are available on the `react` and `expo` factories:
+
+| Flag       | Default | Description                                                                                                                                           |
+| ---------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `query`    | `true`  | Enable [`@tanstack/eslint-plugin-query`](https://tanstack.com/query) recommended rules.                                                               |
+| `tailwind` | `false` | Enable [`eslint-plugin-tailwindcss`](https://github.com/francoismassart/eslint-plugin-tailwindcss) (v4 track). Opt-in while the v4 plugin is in beta. |
+
+```ts
+import { react } from '@oncoursesystems/eslint-config';
+
+export default react({
+    tailwind: true, // turn on Tailwind linting
+    query: false, // turn off TanStack Query linting
+});
+```
+
+## Migrating from v1 to v2
+
+v2 is a breaking change. The headline differences:
+
+- **ESLint 10 is required** (v1 targeted ESLint 9). Bump `eslint` to `^10` in your project.
+- **The `react` / `expo` / `sencha` boolean options are gone.** Instead of one `oncourse()` factory with flags, there are now dedicated factory exports. Pick the one for your project.
+- **Plain JS/TS projects are unchanged** — the default `oncourse()` export still works the same way.
+- **Tailwind is now opt-in** via the `tailwind` flag (and uses the `eslint-plugin-tailwindcss` v4 track).
+- **TanStack Query is on by default** in the `react` and `expo` configs; disable it with `query: false`.
+
+Update your `eslint.config.{js,ts}`:
+
+```diff
+- import oncourse from '@oncoursesystems/eslint-config';
++ import { react } from '@oncoursesystems/eslint-config';
+
+- export default oncourse({ react: true });
++ export default react();
+```
+
+```diff
+- import oncourse from '@oncoursesystems/eslint-config';
++ import { expo } from '@oncoursesystems/eslint-config';
+
+- export default oncourse({ expo: true });
++ export default expo();
+```
+
+```diff
+- import oncourse from '@oncoursesystems/eslint-config';
++ import { sencha } from '@oncoursesystems/eslint-config';
+
+- export default oncourse({ sencha: true });
++ export default sencha();
+```
+
+Anything you previously passed to `oncourse()` (antfu options, extra flat-config objects) still works — just move it into the new factory call, e.g. `react({ typescript: { tsconfigPath: './tsconfig.json' } }, { rules: { /* ... */ } })`.
+
+## Config VS Code auto-fix on save
+
+Install the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and add to `.vscode/settings.json`:
 
 ```json
 {
@@ -60,11 +184,11 @@ Install [VS Code ESLint extension](https://marketplace.visualstudio.com/items?it
 
     // Auto-fix on save
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true,
-        "source.organizeImports": true
+        "source.fixAll.eslint": "explicit",
+        "source.organizeImports": "never"
     },
 
-    // Silent the stylistic rules in your IDS, but still auto-fix them
+    // Silence the stylistic rules in your IDE, but still auto-fix them
     "eslint.rules.customizations": [
         { "rule": "style/*", "severity": "off", "fixable": true },
         { "rule": "format/*", "severity": "off", "fixable": true },
@@ -88,7 +212,6 @@ Install [VS Code ESLint extension](https://marketplace.visualstudio.com/items?it
         "markdown",
         "json",
         "jsonc",
-        "yaml",
         "toml",
         "xml",
         "css",
@@ -98,96 +221,24 @@ Install [VS Code ESLint extension](https://marketplace.visualstudio.com/items?it
 }
 ```
 
-### React Configuration
+## View enabled rules
 
-To enable React support, you need to explicitly turn it on:
-
-```js
-// eslint.config.js
-import oncourse from '@oncoursesystems/eslint-config';
-
-export default oncourse({
-    react: true,
-});
-```
-
-Running npx eslint should prompt you to install the required dependencies, otherwise, you can install them manually:
-
-```bash
-# NPM
-npm i -D @eslint-react/eslint-plugin eslint-plugin-react-hooks eslint-plugin-react-refresh @tanstack/eslint-plugin-query
-
-# PNPM
-pnpm i -D @eslint-react/eslint-plugin eslint-plugin-react-hooks eslint-plugin-react-refresh @tanstack/eslint-plugin-query
-```
-
-### Sencha ExtJS Configuration
-
-To enable Sencha ExtJS support, you need to explicitly turn it on:
-
-```js
-// eslint.config.js
-import oncourse from '@oncoursesystems/eslint-config';
-
-export default oncourse({
-    react: true,
-});
-```
-
-Running npx eslint should prompt you to install the required dependencies, otherwise, you can install them manually:
-
-```bash
-# NPM
-npm i -D @sencha/eslint-plugin-extjs
-
-# PNPM
-pnpm i -D @sencha/eslint-plugin-extjs
-```
-
-### Customization
-
-Configure the initial preset with the same parameters as expose [@antfu/eslint-config](https://github.com/antfu/eslint-config/blob/main/README.md#customization)
-
-Example:
-
-```js
-// eslint.config.ts
-import oncourse from '@oncoursesystems/eslint-config';
-
-export default oncourse(
-    // Configure integrations here
-    {
-        formatters: false,
-    },
-    // Any additional objects will be passed in as ESLint Flat Configs
-    // The files config is optional, but can be used to specify which files to lint
-    {
-        files: ['src/**/*.ts', 'src/**/*.tsx'],
-        rules: {
-            'ts/typedef': 'off',
-        }
-    },
-);
-```
-
-## View Enabled Rules
-
-To view what rules are enabled in your project and apply them to files, go to your project root that contains `eslint.config.js` and run:
+From the project root that contains your `eslint.config.{js,ts}`:
 
 ```bash
 npx @eslint/config-inspector
 ```
 
-## Release & Publish
+## Release & publish
 
-Make sure you have authenticated to your npm account using `npm login`. To publish packages, run the following command:
+Make sure you're authenticated to npm (`npm login`), then run:
 
 ```sh
 pnpm run release
 ```
 
-This will auto-bump the version numbers, then upload the packages to [NPM](https://www.npmjs.com/oncoursesystems). It will also create a new GitHub release with the tagged version.
+This bumps the version, publishes to [NPM](https://www.npmjs.com/package/@oncoursesystems/eslint-config), and creates a tagged GitHub release.
 
 ## Credits
 
-The project is built on top of Anthony Fu's amazing `[@antfu/eslint-config](https://github.com/antfu/eslint-config)` package.
+Built on top of Anthony Fu's excellent [`@antfu/eslint-config`](https://github.com/antfu/eslint-config).
