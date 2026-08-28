@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    runs-on: k8s-linux
+    runs-on: linux
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
